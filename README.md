@@ -67,7 +67,6 @@
     .inventory-item {
       margin: 10px;
       padding: 10px;
-      background-color: #fff;
       border-radius: 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
       text-align: center;
@@ -101,13 +100,13 @@
 <div class="wheel">
   <h2>Звичайне колесо фортуни (100 DefCoin)</h2>
   <button id="spinWheel">Крутити</button>
-  <div>Шанси: Хмарка — 65%, Пельмень — 25%, Артем — 9.9%, Дем’ян Романюк — 0.099%, RomanDefUA — 0.001%</div>
+  <div>Шанси: Хмарка — 65%, Пельмень — 25%, Артем — 9.9%, Дем’ян — 0.099%, Роман — 0.001%</div>
 </div>
 
 <div class="wheel">
   <h2>Преміум колесо фортуни (1000 DefCoin)</h2>
   <button id="spinPremium">Крутити</button>
-  <div>Шанси: Артем — 50%, Дем’ян Романюк — 40%, RomanDefUA — 10%</div>
+  <div>Шанси: Артем — 40%, Дем’ян — 50%, Роман — 10%</div>
 </div>
 
 <h3>Отримані персонажі</h3>
@@ -153,19 +152,45 @@ function updateButtons() {
 function addCharacter(name) {
   if (inventory[name]) return;
   inventory[name] = { level: 1 };
+
   const container = document.createElement("div");
   container.className = "inventory-item";
+
+  // Встановлюємо колір фону залежно від персонажа
+  let bgColor = "#fff";
+  switch (name) {
+    case "Хмарка_Папугай":
+      bgColor = "#555";
+      break;
+    case "PhelmencikPon21K":
+      bgColor = "#2196F3";
+      break;
+    case "ArtemMNO":
+    case "Дем’ян Романюк":
+      bgColor = "#f44336";
+      break;
+    case "RomanDefUA":
+      bgColor = "#FFD700";
+      break;
+  }
+  container.style.backgroundColor = bgColor;
+  container.style.color = "#fff";
+
   const img = document.createElement("img");
   img.src = characters[name].image;
   img.alt = name;
   img.title = name;
   img.classList.add("spin");
+
   setTimeout(() => img.classList.remove("spin"), 1000);
+
   const levelText = document.createElement("div");
   levelText.textContent = `Рівень: 1`;
+
   const upgradeBtn = document.createElement("button");
   upgradeBtn.textContent = `Прокачати (10)`;
   upgradeBtn.className = "green";
+
   upgradeBtn.addEventListener("click", () => {
     const currentLevel = inventory[name].level;
     if (currentLevel >= 100) return;
@@ -175,10 +200,12 @@ function addCharacter(name) {
       inventory[name].level++;
       totalPower += characters[name].power;
       levelText.textContent = `Рівень: ${inventory[name].level}`;
-      upgradeBtn.textContent = inventory[name].level < 100 ? `Прокачати (${10 * inventory[name].level})` : "Макс";
+      upgradeBtn.textContent = inventory[name].level < 100 ?
+        `Прокачати (${10 * inventory[name].level})` : "Макс";
       updateDisplay();
     }
   });
+
   container.appendChild(img);
   container.appendChild(levelText);
   container.appendChild(upgradeBtn);
@@ -237,13 +264,9 @@ document.getElementById("spinPremium").addEventListener("click", () => {
   if (defcoin < 1000) return;
   defcoin -= 1000;
   const roll = Math.random() * 100;
-  if (roll < 50) {
-    addCharacter("ArtemMNO");
-  } else if (roll < 90) {
-    addCharacter("Дем’ян Романюк");
-  } else {
-    addCharacter("RomanDefUA");
-  }
+  if (roll < 40) addCharacter("ArtemMNO");
+  else if (roll < 90) addCharacter("Дем’ян Романюк");
+  else addCharacter("RomanDefUA");
   updateDisplay();
 });
 
@@ -251,4 +274,3 @@ updateDisplay();
 </script>
 </body>
 </html>
-
