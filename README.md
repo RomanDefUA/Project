@@ -71,7 +71,7 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
       text-align: center;
       width: 140px;
-      color: #fff;
+      color: white;
     }
     .inventory img {
       width: 80px;
@@ -95,19 +95,19 @@
 
 <h1>DefCoin: <span id="defcoin">0</span></h1>
 <button id="clickButton">Клік!</button><br>
-<button id="autoFarmButton">Купити автозбір (80 DefCoin)</button>
-<button id="multiplierButton">Купити множник (40 DefCoin)</button>
+<button id="autoFarmButton">Купити автозбір (500 DefCoin)</button>
+<button id="multiplierButton">Купити множник (300 DefCoin)</button>
 
 <div class="wheel">
-  <h2>Звичайне колесо фортуни (100 DefCoin)</h2>
+  <h2>Звичайне колесо фортуни (1000 DefCoin)</h2>
   <button id="spinWheel">Крутити</button>
   <div>Шанси: Хмарка — 65%, Пельмень — 25%, Артем — 9.9%, Дем’ян — 0.099%, Роман — 0.001%</div>
 </div>
 
 <div class="wheel">
-  <h2>Преміум колесо фортуни (1000 DefCoin)</h2>
+  <h2>Преміум колесо фортуни (5000 DefCoin)</h2>
   <button id="spinPremium">Крутити</button>
-  <div>Шанси: Артем — 40%, Дем’ян — 50%, Роман — 10%</div>
+  <div>Шанси: Артем — 50%, Дем’ян — 40%, Роман — 10%</div>
 </div>
 
 <h3>Отримані персонажі</h3>
@@ -116,11 +116,11 @@
 
 <script>
 const characters = {
-  "Хмарка_Папугай": { power: 10, image: "" },
-  "PhelmencikPon21K": { power: 100, image: "" },
-  "ArtemMNO": { power: 1000, image: "" },
-  "Дем’ян Романюк": { power: 1000, image: "" },
-  "RomanDefUA": { power: 100000, image: "" }
+  "Хмарка_Папугай": { power: 10, image: "", color: "#555" },
+  "PhelmencikPon21K": { power: 100, image: "", color: "#2196F3" },
+  "ArtemMNO": { power: 1000, image: "", color: "#d32f2f" },
+  "Дем’ян Романюк": { power: 1000, image: "", color: "#b71c1c" },
+  "RomanDefUA": { power: 100000, image: "", color: "#FFD700" }
 };
 
 let defcoin = 0;
@@ -137,17 +137,17 @@ function updateDisplay() {
 
 function updateButtons() {
   const autoBtn = document.getElementById("autoFarmButton");
-  autoBtn.className = defcoin >= 80 ? "green buyable" : "red";
+  autoBtn.className = defcoin >= 500 ? "green buyable" : "red";
   if (autoFarm) {
     autoBtn.textContent = "Куплено";
     autoBtn.className = "gray";
   }
 
   const multBtn = document.getElementById("multiplierButton");
-  multBtn.className = defcoin >= 40 ? "green buyable" : "red";
+  multBtn.className = defcoin >= 300 ? "green buyable" : "red";
 
-  document.getElementById("spinWheel").className = defcoin >= 100 ? "green buyable" : "red";
-  document.getElementById("spinPremium").className = defcoin >= 1000 ? "green buyable" : "red";
+  document.getElementById("spinWheel").className = defcoin >= 1000 ? "green buyable" : "red";
+  document.getElementById("spinPremium").className = defcoin >= 5000 ? "green buyable" : "red";
 }
 
 function addCharacter(name) {
@@ -156,65 +156,44 @@ function addCharacter(name) {
 
   const container = document.createElement("div");
   container.className = "inventory-item";
-
-  // Назва
-  const nameText = document.createElement("div");
-  nameText.textContent = name;
-  nameText.style.fontWeight = "bold";
-  nameText.style.marginBottom = "5px";
-
-  // Колір фону
-  let bgColor = "#fff";
-  switch (name) {
-    case "Хмарка_Папугай":
-      bgColor = "#555";
-      break;
-    case "PhelmencikPon21K":
-      bgColor = "#2196F3";
-      break;
-    case "ArtemMNO":
-    case "Дем’ян Романюк":
-      bgColor = "#f44336";
-      break;
-    case "RomanDefUA":
-      bgColor = "#FFD700";
-      break;
-  }
-  container.style.backgroundColor = bgColor;
+  container.style.backgroundColor = characters[name].color;
 
   const img = document.createElement("img");
   img.src = characters[name].image;
   img.alt = name;
   img.title = name;
   img.classList.add("spin");
-  setTimeout(() => img.classList.remove("spin"), 1000);
+
+  const nameText = document.createElement("div");
+  nameText.textContent = name;
 
   const levelText = document.createElement("div");
   levelText.textContent = `Рівень: 1`;
 
   const upgradeBtn = document.createElement("button");
-  upgradeBtn.textContent = `Прокачати (10)`;
+  upgradeBtn.textContent = `Прокачати (100)`;
   upgradeBtn.className = "green";
+
   upgradeBtn.addEventListener("click", () => {
     const currentLevel = inventory[name].level;
     if (currentLevel >= 100) return;
-    const cost = 10 * currentLevel;
+    const cost = 100 * currentLevel;
     if (defcoin >= cost) {
       defcoin -= cost;
       inventory[name].level++;
       totalPower += characters[name].power;
       levelText.textContent = `Рівень: ${inventory[name].level}`;
-      upgradeBtn.textContent = inventory[name].level < 100 ?
-        `Прокачати (${10 * inventory[name].level})` : "Макс";
+      upgradeBtn.textContent = inventory[name].level < 100 ? `Прокачати (${100 * inventory[name].level})` : "Макс";
       updateDisplay();
     }
   });
 
-  container.appendChild(nameText);
   container.appendChild(img);
+  container.appendChild(nameText);
   container.appendChild(levelText);
   container.appendChild(upgradeBtn);
   document.getElementById("inventory").appendChild(container);
+
   totalPower += characters[name].power;
   updateDisplay();
 }
@@ -223,7 +202,7 @@ function gainPassiveCoins() {
   for (const [name, data] of Object.entries(inventory)) {
     const level = data.level;
     const power = characters[name].power;
-    defcoin += power * level * multiplier;
+    defcoin += power * level * multiplier * 0.1;
   }
   updateDisplay();
 }
@@ -238,24 +217,24 @@ document.getElementById("clickButton").addEventListener("click", () => {
 });
 
 document.getElementById("autoFarmButton").addEventListener("click", () => {
-  if (defcoin >= 80 && !autoFarm) {
-    defcoin -= 80;
+  if (defcoin >= 500 && !autoFarm) {
+    defcoin -= 500;
     autoFarm = true;
     updateDisplay();
   }
 });
 
 document.getElementById("multiplierButton").addEventListener("click", () => {
-  if (defcoin >= 40) {
-    defcoin -= 40;
+  if (defcoin >= 300) {
+    defcoin -= 300;
     multiplier++;
     updateDisplay();
   }
 });
 
 document.getElementById("spinWheel").addEventListener("click", () => {
-  if (defcoin < 100) return;
-  defcoin -= 100;
+  if (defcoin < 1000) return;
+  defcoin -= 1000;
   const roll = Math.random() * 100;
   if (roll < 65) addCharacter("Хмарка_Папугай");
   else if (roll < 90) addCharacter("PhelmencikPon21K");
@@ -266,10 +245,10 @@ document.getElementById("spinWheel").addEventListener("click", () => {
 });
 
 document.getElementById("spinPremium").addEventListener("click", () => {
-  if (defcoin < 1000) return;
-  defcoin -= 1000;
+  if (defcoin < 5000) return;
+  defcoin -= 5000;
   const roll = Math.random() * 100;
-  if (roll < 40) addCharacter("ArtemMNO");
+  if (roll < 50) addCharacter("ArtemMNO");
   else if (roll < 90) addCharacter("Дем’ян Романюк");
   else addCharacter("RomanDefUA");
   updateDisplay();
@@ -277,5 +256,6 @@ document.getElementById("spinPremium").addEventListener("click", () => {
 
 updateDisplay();
 </script>
+
 </body>
 </html>
