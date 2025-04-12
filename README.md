@@ -70,7 +70,8 @@
       border-radius: 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
       text-align: center;
-      width: 120px;
+      width: 140px;
+      color: #fff;
     }
     .inventory img {
       width: 80px;
@@ -156,7 +157,13 @@ function addCharacter(name) {
   const container = document.createElement("div");
   container.className = "inventory-item";
 
-  // Встановлюємо колір фону залежно від персонажа
+  // Назва
+  const nameText = document.createElement("div");
+  nameText.textContent = name;
+  nameText.style.fontWeight = "bold";
+  nameText.style.marginBottom = "5px";
+
+  // Колір фону
   let bgColor = "#fff";
   switch (name) {
     case "Хмарка_Папугай":
@@ -174,14 +181,12 @@ function addCharacter(name) {
       break;
   }
   container.style.backgroundColor = bgColor;
-  container.style.color = "#fff";
 
   const img = document.createElement("img");
   img.src = characters[name].image;
   img.alt = name;
   img.title = name;
   img.classList.add("spin");
-
   setTimeout(() => img.classList.remove("spin"), 1000);
 
   const levelText = document.createElement("div");
@@ -190,7 +195,6 @@ function addCharacter(name) {
   const upgradeBtn = document.createElement("button");
   upgradeBtn.textContent = `Прокачати (10)`;
   upgradeBtn.className = "green";
-
   upgradeBtn.addEventListener("click", () => {
     const currentLevel = inventory[name].level;
     if (currentLevel >= 100) return;
@@ -206,6 +210,7 @@ function addCharacter(name) {
     }
   });
 
+  container.appendChild(nameText);
   container.appendChild(img);
   container.appendChild(levelText);
   container.appendChild(upgradeBtn);
