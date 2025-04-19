@@ -101,7 +101,7 @@
 <div class="wheel">
   <h2>Звичайне колесо фортуни (120 DefCoin)</h2>
   <button id="spinWheel">Крутити</button>
-  <div>Шанси: Хмарка_Папугай — 65%, Пельмень — 25%, ArtemMNO — 9.9%, Дем’ян Романюк — 0.099%, RomanDefUA — 0.001%</div>
+  <div>Шанси: Хмарка_Папугай — 65%, PhelmencikPon21K — 25%, ArtemMNO — 9.9%, Дем’ян Романюк — 0.099%, RomanDefUA — 0.001%</div>
 </div>
 
 <div class="wheel">
